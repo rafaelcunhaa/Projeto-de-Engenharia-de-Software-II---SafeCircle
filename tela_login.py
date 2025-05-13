@@ -9,6 +9,11 @@ Na parte de UID e PWD
 Use suas credenciais 
 Para executar 
 
+Caso a autenticação seja pelo windows use: 
+"Trusted_Connection=yes;"
+ao invés de:
+        "UID=Seu_Usuario;"
+        "PWD=Sua_senha;"
 """
 
 def conectar_bd():
@@ -16,8 +21,8 @@ def conectar_bd():
         "Driver={SQL Server};"
         "Server=RAFAEL;"
         "Database=SafeCircle;"
-        "UID=sa;"
-        "PWD=291690Rc@;"
+        "UID=Seu_Usuario;"
+        "PWD=Sua_senha;"
     )
     return pyodbc.connect(dados_conexao)
 
