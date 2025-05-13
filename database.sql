@@ -7,7 +7,7 @@ CREATE TABLE Usuario (
 	email VARCHAR(50) NOT NULL,
 	senha VARCHAR(50) NOT NULL,
 	dat_nac DATE NOT NULL,
-	telefone INT UNIQUE NOT NULL,
+	telefone VARCHAR(11) UNIQUE NOT NULL,
 	cpf VARCHAR(11) UNIQUE NOT NULL,
 	rg VARCHAR(14) UNIQUE NOT NULL,
 	ind_front VARBINARY(MAX), -- foto da indentidade 
