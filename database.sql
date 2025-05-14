@@ -22,3 +22,4 @@ CREATE TABLE Ocorrencia (
 	estagio VARCHAR(50) NOT NULL,
 	id_user INT FOREIGN KEY REFERENCES Usuario(id_user)
 );
+
