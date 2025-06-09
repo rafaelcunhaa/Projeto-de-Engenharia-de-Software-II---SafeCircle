@@ -21,6 +21,8 @@ O **SafeCircle** é um sistema básico de segurança que permite:
 - **Flask**
 - **SQLite3**
 - **HTML/CSS (com templates Jinja2)**
+- **Github Copilot**
+- **GitHub**
 
 ---
 
