@@ -106,6 +106,26 @@ def ocorrencia():
 
     return render_template("ocorrencia.html")
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["emailUsuario"]
+        senha = request.form["senhaUsuario"]
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT nome FROM Usuario WHERE email = ? AND senha = ?", (email, senha))
+            resultado = cursor.fetchone()
+
+            if resultado:
+                session["usuario"] = resultado[0]
+                return redirect("/ocorrencia")
+            else:
+                return "Email ou senha inválidos."
+
+    return render_template("login.html")
+
+
 if __name__ == "__main__":
     criar_banco()
     app.run(debug=True)
