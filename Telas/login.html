@@ -19,17 +19,19 @@
         <div>
             <h2>Seja bem vindo!</h2>
             <h3>Entre em sua conta</h3>
-            <div>
-                <Label>Email</Label><br>
-                <input type="email" name="emailUsuario" placeholder="Digite aqui seu Email" required>
-            </div>
-            <div>
-                <Label>Senha</Label><br>
-                <input type="password" name="senhaUsuario" placeholder="Digite aqui sua senha" required>
-            </div>
-            <div>
-                <button type="submit">Login</button>
-            </div>
+            <form action="/login" method="POST">
+                <div>
+                    <label>Email</label><br>
+                    <input type="email" name="emailUsuario" placeholder="Digite aqui seu Email" required>
+                </div>
+                <div>
+                    <label>Senha</label><br>
+                    <input type="password" name="senhaUsuario" placeholder="Digite aqui sua senha" required>
+                </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
             <div>
                 <a href="">Ajuda & Suporte</a>
             </div>
