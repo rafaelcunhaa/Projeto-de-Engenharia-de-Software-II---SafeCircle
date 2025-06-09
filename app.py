@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "seu_segredo"  # Necessário para usar sessões
+app.secret_key = "seu_segredo"
 DB_PATH = "safecircle.db"
 
 def criar_banco():
@@ -27,9 +27,11 @@ def criar_banco():
         CREATE TABLE IF NOT EXISTS Ocorrencia(
             id_ocorrencia INTEGER PRIMARY KEY AUTOINCREMENT,
             data_inicio DATETIME NOT NULL,
-            data_conclusao DATETIME NOT NULL,
+            data_conclusao DATETIME,
             descricao TEXT CHECK(LENGTH(descricao) <= 80),
             estagio TEXT NOT NULL CHECK(LENGTH(estagio) <= 50),
+            titulo TEXT,
+            local TEXT,
             id_user INTEGER,
             FOREIGN KEY (id_user) REFERENCES Usuario(id_user)
         );
@@ -39,6 +41,25 @@ def criar_banco():
 @app.route("/")
 def index():
     return render_template("cadastro.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["emailUsuario"]
+        senha = request.form["senhaUsuario"]
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT nome FROM Usuario WHERE email = ? AND senha = ?", (email, senha))
+            resultado = cursor.fetchone()
+
+            if resultado:
+                session["usuario"] = resultado[0]
+                return redirect("/telaPrincipal")
+            else:
+                return "Email ou senha inválidos"
+
+    return render_template("login.html")
 
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
@@ -62,9 +83,15 @@ def cadastrar():
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)               
             """, (nome, email, senha, nascimento, telefone, cpf, rg, ind_front, ind_back))
             conn.commit()
-        return "Usuário cadastrado com sucesso!"
+        return redirect("/login")
     except sqlite3.IntegrityError as e:
         return f"Erro: {str(e)}"
+
+@app.route("/telaPrincipal")
+def tela_principal():
+    if "usuario" not in session:
+        return redirect("/login")
+    return render_template("telaPrincipal.html")
 
 @app.route("/ocorrencia", methods=["GET", "POST"])
 def ocorrencia():
@@ -76,9 +103,10 @@ def ocorrencia():
         titulo = request.form["ocorrencia"]
         local = request.form["localizacao"]
 
+        descricao_completa = f"Título: {titulo}\nLocalização: {local}\nDescrição: {descricao}"
         estagio = "Em andamento"
         data_inicio = datetime.now()
-        data_conclusao = datetime.now()  # ou defina como None e atualize depois
+        data_conclusao = None
 
         try:
             with sqlite3.connect(DB_PATH) as conn:
@@ -96,35 +124,14 @@ def ocorrencia():
                 cursor.execute("""
                     INSERT INTO Ocorrencia (data_inicio, data_conclusao, descricao, estagio, id_user)
                     VALUES (?, ?, ?, ?, ?)
-                """, (data_inicio, data_conclusao, f"{titulo} - {local}: {descricao}", estagio, id_user))
+                """, (data_inicio, data_conclusao, descricao_completa, estagio, id_user))
                 conn.commit()
 
             return "Ocorrência registrada com sucesso!"
-
         except Exception as e:
-            return f"Erro ao registrar ocorrência: {e}"
+            return f"Erro ao registrar ocorrência: {str(e)}"
 
     return render_template("ocorrencia.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form["emailUsuario"]
-        senha = request.form["senhaUsuario"]
-
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT nome FROM Usuario WHERE email = ? AND senha = ?", (email, senha))
-            resultado = cursor.fetchone()
-
-            if resultado:
-                session["usuario"] = resultado[0]
-                return redirect("/ocorrencia")
-            else:
-                return "Email ou senha inválidos."
-
-    return render_template("login.html")
-
 
 if __name__ == "__main__":
     criar_banco()
