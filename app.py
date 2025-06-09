@@ -40,7 +40,7 @@ def criar_banco():
 
 @app.route("/")
 def index():
-    return render_template("cadastro.html")
+    return render_template("login.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -60,6 +60,10 @@ def login():
                 return "Email ou senha inválidos"
 
     return render_template("login.html")
+
+@app.route('/cadastro', methods=['GET'])
+def cadastro():
+    return render_template('cadastro.html')
 
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
