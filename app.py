@@ -106,7 +106,7 @@ def ocorrencia():
         descricao_completa = f"Título: {titulo}\nLocalização: {local}\nDescrição: {descricao}"
         estagio = "Em andamento"
         data_inicio = datetime.now()
-        data_conclusao = None
+        data_conclusao = datetime.now()
 
         try:
             with sqlite3.connect(DB_PATH) as conn:
