@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastrar - SafeCircle</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #d63031);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      max-width: 260px;
+      height: auto;
+    }
+
+    .cadastroOuLogin {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .cadastroOuLogin button {
+      background-color: #e74c3c;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form h2 {
+      color: #d63031;
+      text-align: center;
+    }
+
+    .form h3 {
+      text-align: center;
+      font-weight: normal;
+      font-size: 16px;
+      color: #444;
+    }
+
+    .form div {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form button {
+      background-color: #e74c3c;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    footer {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    footer img {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .cadastro {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .cadastro button {
+      background-color: #e74c3c;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 400px) {
+      .container {
+        padding: 16px;
+      }
+
+      .cadastroOuLogin button {
+        padding: 8px 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="{{ url_for('static', filename='Imagens/LogoDoSafeCircle.png') }}" alt="Logo do SafeCircle">
+
+      </div>
+      <div class="cadastroOuLogin">
+        <a href="/login"><button type="button">Login</button></a>
+        <button type="button">Cadastrar</button>
+      </div>
+    </header>
+
+    <main class="form">
+      <h2>Seja bem-vindo!</h2>
+      <h3>Crie sua conta</h3>
+      <form action="/cadastrar" method="POST" enctype="multipart/form-data">
+        <div>
+          <label>Nome Completo</label>
+          <input type="text" name="nome" required>
+        </div>
+
+        <div>
+          <label>Data Nascimento</label>
+          <input type="date" name="nascimento" required>
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div>
+          <label>Senha</label>
+          <input type="password" name="senha" required>
+        </div>
+
+        <div>
+          <label>Telefone</label>
+          <input type="text" name="telefone" required>
+        </div>
+
+        <div>
+          <label>CPF</label>
+          <input type="text" name="cpf" required>
+        </div>
+
+        <div>
+          <label>RG</label>
+          <input type="text" name="rg" required>
+        </div>
+
+        <div>
+          <label>Foto da Identidade (Frente)</label>
+          <input type="file" name="ind_front" required>
+        </div>
+
+        <div>
+          <label>Foto da Identidade (Verso)</label>
+          <input type="file" name="ind_back" required>
+        </div>
+
+        <div class="cadastro">
+          <button type="submit">Cadastrar</button>
+        </div>
+      </form>
+    </main>
+
+    <footer>
+      <img src="{{ url_for('static', filename='Imagens/X.png') }}" alt="Twitter">
+      <img src="{{ url_for('static', filename='Imagens/logoFacebook.png') }}" alt="Facebook">
+      <img src="{{ url_for('static', filename='Imagens/insta.png') }}" alt="Instagram">
+    </footer>
+  </div>
+</body>
+</html>
