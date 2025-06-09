@@ -1,31 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportar Ocorrência</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportar Ocorrência</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      display: grid;
+      gap: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      text-align: center;
+      color: #dc3545;
+    }
+
+    header h2 {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #333;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      height: 80px;
+      resize: none;
+    }
+
+    button {
+      background-color: #dc3545;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #c82333;
+    }
+
+    @media screen and (max-width: 400px) {
+      .container {
+        padding: 16px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
-<header>
-    <h2>Reportar Ocorrência</h2>
-    <hr>
-</header>
 <body>
+
+  <div class="container">
+    <header>
+      <h2>Reportar Ocorrência</h2>
+      <hr />
+    </header>
+
     <form action="/ocorrencia" method="POST">
-        <div>
-            <label>Qual seria a Ocorrência?</label><br>
-            <input type="text" name="ocorrencia" placeholder="Ex: Vazamento" required>
-        </div>
-        <div>
-            <label>Localização</label><br>
-            <input type="text" name="localizacao" placeholder="Ex: Corredor 2" required>
-        </div>
-        <div>
-            <label>Descrição da Ocorrência</label><br>
-            <textarea name="descricao" placeholder="Descreva a situação..." required></textarea>
-        </div>
-        <div>
-            <button type="submit">Enviar</button>
-        </div>
+      <div>
+        <label>Qual seria a Ocorrência?</label>
+        <input type="text" name="ocorrencia" placeholder="Ex: Vazamento" required />
+      </div>
+
+      <div>
+        <label>Localização</label>
+        <input type="text" name="localizacao" placeholder="Ex: Corredor 2" required />
+      </div>
+
+      <div>
+        <label>Descrição da Ocorrência</label>
+        <textarea name="descricao" placeholder="Descreva a situação..." required></textarea>
+      </div>
+
+      <div>
+        <button type="submit">Enviar</button>
+      </div>
     </form>
+  </div>
+
 </body>
 </html>
