@@ -12,13 +12,13 @@ def criar_banco():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS Usuario(
             id_user INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            senha TEXT NOT NULL,
+            nome TEXT NOT NULL CHECK(LENGTH(nome) <= 50),
+            email TEXT UNIQUE NOT NULL CHECK(LENGTH(email) <= 50),
+            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 50),
             dat_nac DATE NOT NULL,
-            telefone TEXT UNIQUE NOT NULL,
-            cpf TEXT UNIQUE NOT NULL,
-            rg TEXT UNIQUE NOT NULL,                                                                                          
+            telefone TEXT UNIQUE NOT NULL CHECK(LENGTH(telefone) = 11),
+            cpf TEXT UNIQUE NOT NULL CHECK(LENGTH(cpf) = 11),
+            rg TEXT UNIQUE NOT NULL CHECK(LENGTH(rg) <= 14),
             ind_front BLOB,
             ind_back BLOB
         );        
@@ -28,8 +28,8 @@ def criar_banco():
             id_ocorrencia INTEGER PRIMARY KEY AUTOINCREMENT,
             data_inicio DATETIME NOT NULL,
             data_conclusao DATETIME NOT NULL,
-            descricao TEXT,
-            estagio TEXT NOT NULL,
+            descricao TEXT CHECK(LENGTH(descricao) <= 80),
+            estagio TEXT NOT NULL CHECK(LENGTH(estagio) <= 50),
             id_user INTEGER,
             FOREIGN KEY (id_user) REFERENCES Usuario(id_user)
         );
