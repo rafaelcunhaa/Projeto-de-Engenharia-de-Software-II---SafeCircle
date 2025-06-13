@@ -138,7 +138,7 @@ def ocorrencia():
                 """, (data_inicio, data_conclusao, descricao_completa, estagio, id_user))
                 conn.commit()
 
-            return "Ocorrência registrada com sucesso!"
+            return redirect("/telaPrincipal")
         except Exception as e:
             return f"Erro ao registrar ocorrência: {str(e)}"
 
