@@ -36,6 +36,13 @@ def criar_banco():
             FOREIGN KEY (id_user) REFERENCES Usuario(id_user)
         );
         """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Adimin(
+            id_adimin INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL CHECK(LENGTH(email) <= 50),
+            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 50)
+        );        
+        """)
         conn.commit()
 
 @app.route("/")
