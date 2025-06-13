@@ -1,6 +1,6 @@
 # SafeCircle 
 
-Sistema web simples para gerenciamento de usuários e ocorrências com Flask e SQLite.
+App simples para gerenciamento de usuários e ocorrências com Flask e SQLite.
 
 ---
 
@@ -21,6 +21,8 @@ O **SafeCircle** é um sistema básico de segurança que permite:
 - **Flask**
 - **SQLite3**
 - **HTML/CSS (com templates Jinja2)**
+- **Github Desktop**
+- **GitHub**
 
 ---
 
