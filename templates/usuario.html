@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuário</title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        }
+
+        .container {
+        width: 90%;
+        max-width: 400px;
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        display: grid;
+        gap: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+        text-align: center;
+        color: #dc3545;
+        }
+
+        button {
+        background-color: #dc3545;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        width: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        }
+
+    button:hover {
+      background-color: #c82333;
+    }
+
+        @media screen and (max-width: 400px) {
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Minha Conta</h1>
+    </header>
+    <main>
+        <div class="container">
+            <img src="fotocolocadadeperfilnoinicio.jppg" alt="Foto do usuário" width="100" height="100">
+            <h2>Nome do Usuário</h2>
+            <p>Email: usuario@exemplo.com</p>
+            <p>Senha: xxxxxxxxxxxxxxxxx</p>
+            <h3>Informações Pessoais</h3>
+            <p>Telefone: (00) 00000-0000</p>
+            <p>Data de nascimento: 01/01/2000</p>
+            <p>Endereço: Rua Exemplo, 123 - Cidade/UF</p>
+            <button>Editar Perfil</button>
+            <button>Alterar Senha</button>
+            <button>Sair da Conta</button>
+        </div>
+    </main>
+</body>
+</html>
