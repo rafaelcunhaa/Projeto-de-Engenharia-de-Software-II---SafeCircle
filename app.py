@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import sqlite3
 from datetime import datetime
 
@@ -64,7 +64,8 @@ def login():
                 session["usuario"] = resultado[0]
                 return redirect("/telaPrincipal")
             else:
-                return "Email ou senha inválidos"
+                flash("Email ou senha inválidos!", "erro")
+                return redirect("/login")
 
     return render_template("login.html")
 
