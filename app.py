@@ -36,6 +36,13 @@ def criar_banco():
             FOREIGN KEY (id_user) REFERENCES Usuario(id_user)
         );
         """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Adimin(
+            id_adimin INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL CHECK(LENGTH(email) <= 50),
+            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 50)
+        );        
+        """)
         conn.commit()
 
 @app.route("/")
@@ -103,11 +110,9 @@ def ocorrencia():
         return redirect("/login")
 
     if request.method == "POST":
-        descricao = request.form["descricao"]
+        descricao_completa = request.form["descricao"]
         titulo = request.form["ocorrencia"]
         local = request.form["localizacao"]
-
-        descricao_completa = f"Título: {titulo}\nLocalização: {local}\nDescrição: {descricao}"
         estagio = "Em andamento"
         data_inicio = datetime.now()
         data_conclusao = datetime.now()
@@ -126,12 +131,12 @@ def ocorrencia():
                     return "Usuário não encontrado."
 
                 cursor.execute("""
-                    INSERT INTO Ocorrencia (data_inicio, data_conclusao, descricao, estagio, id_user)
-                    VALUES (?, ?, ?, ?, ?)
-                """, (data_inicio, data_conclusao, descricao_completa, estagio, id_user))
+                    INSERT INTO Ocorrencia (data_inicio, data_conclusao, descricao, estagio, titulo, local, id_user)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (data_inicio, data_conclusao, descricao_completa, estagio, titulo, local, id_user))
                 conn.commit()
 
-            return "Ocorrência registrada com sucesso!"
+            return redirect("/telaPrincipal")
         except Exception as e:
             return f"Erro ao registrar ocorrência: {str(e)}"
 

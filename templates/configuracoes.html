@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <style>
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        }
+
+        .container {
+        width: 90%;
+        max-width: 400px;
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        display: grid;
+        gap: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+        text-align: center;
+        color: #dc3545;
+        }
+
+        @media screen and (max-width: 400px) {
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Configurações</h1>
+        </header>
+
+        <main>
+            <div>
+                <label>Habilitar Notificações</label>
+                <input type="checkbox" title="Habilitar Notificações">
+            </div>
+            <p>Vou colocar mais coisa, só tenho que pensar no que colocar</p>
+        </main>
+    </div>
+</body>
+</html>
