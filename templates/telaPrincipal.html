@@ -128,11 +128,12 @@
 <header>
   <button class="menu-btn" onclick="toggleSidebar()">☰</button>
   
-   <div class="sidebar" id="sidebar">
+  <div class="sidebar" id="sidebar">
     <h2>Menu</h2>
-    <a href="{{ url_for('configuracoes') }}">Configurações</a>
+    <a href="#">Meu Usuário</a>
+    <a href="#">Meu Histórico</a>
+    <a href="#">Configurações</a>
     <a href="#">Avaliação</a>
-    <a href="{{ url_for('usuario') }}">Perfil</a>
     <a href="#">Entidades</a>
   </div>
     <img src="" alt="">
@@ -145,8 +146,8 @@
 
   <button class="botao" onclick="window.location.href='/ocorrencia'">EMERGÊNCIA</button>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
 
     const map = L.map('map').setView([0, 0], 13);
 
