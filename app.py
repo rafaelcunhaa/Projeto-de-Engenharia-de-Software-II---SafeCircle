@@ -105,7 +105,16 @@ def tela_principal():
         return redirect("/login")
     return render_template("telaPrincipal.html")
 
-@app.route("/ocorrencia", methods=["GET", "POST"])
+@app.route("/configuracoes")
+def configuracoes():
+    return render_template("configuracoes.html")
+
+@app.route("/usuario")
+def usuario():
+    return render_template("usuario.html")
+
+
+@app.route("/ocorrencia" , methods=["GET", "POST"])
 def ocorrencia():
     if "usuario" not in session:
         return redirect("/login")
