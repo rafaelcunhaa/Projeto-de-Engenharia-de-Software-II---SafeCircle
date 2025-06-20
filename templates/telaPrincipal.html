@@ -74,6 +74,45 @@
       font-size: 14px;
     }
 
+        /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: -250px; /* escondida inicialmente */
+      background-color: #c82333;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .sidebar a {
+      color: #ecf0f1;
+      text-decoration: none;
+      display: block;
+      margin: 15px 0;
+    }
+
+    /* Botão menu fixo */
+    .menu-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 30px;
+      background: none;
+      border: none;
+      color: #2c3e50;
+      cursor: pointer;
+      z-index: 1100; /* acima da sidebar */
+    }
+
     @media screen and (max-width: 400px) {
       .container {
         padding: 16px;
@@ -87,6 +126,15 @@
   </style>
 </head>
 <header>
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  
+   <div class="sidebar" id="sidebar">
+    <h2>Menu</h2>
+    <a href="{{ url_for('configuracoes') }}">Configurações</a>
+    <a href="#">Avaliação</a>
+    <a href="#">Perfil</a>
+    <a href="#">Entidades</a>
+  </div>
     <img src="" alt="">
     <h3>Bem-vindo</h3>
     <hr>
@@ -142,6 +190,13 @@
     setTimeout(() => {
         map.invalidateSize();
     }, 200);
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const main = document.getElementById('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('shifted');
+    }
     </script>
 
 </body>
