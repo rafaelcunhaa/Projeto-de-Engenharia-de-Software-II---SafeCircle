@@ -6,6 +6,10 @@ app = Flask(__name__)
 app.secret_key = "seu_segredo"
 DB_PATH = "safecircle.db"
 
+##########################################
+########### BANCO DE DADOS ###############
+##########################################
+
 def criar_banco():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -45,9 +49,13 @@ def criar_banco():
         """)
         conn.commit()
 
-@app.route("/")
-def index():
-    return render_template("login.html")
+
+##########################################
+############### Funções ##################
+##########################################
+
+
+####### Função para verificar se o usuário é administrador
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -69,9 +77,8 @@ def login():
 
     return render_template("login.html")
 
-@app.route('/cadastro', methods=['GET'])
-def cadastro():
-    return render_template('cadastro.html')
+
+######## Função para verificar se o usuário é administrador
 
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
@@ -99,20 +106,8 @@ def cadastrar():
     except sqlite3.IntegrityError as e:
         return f"Erro: {str(e)}"
 
-@app.route("/telaPrincipal")
-def tela_principal():
-    if "usuario" not in session:
-        return redirect("/login")
-    return render_template("telaPrincipal.html")
 
-@app.route("/configuracoes")
-def configuracoes():
-    return render_template("configuracoes.html")
-
-@app.route("/usuario")
-def usuario():
-    return render_template("usuario.html")
-
+######## Função para registrar uma ocorrência
 
 @app.route("/ocorrencia" , methods=["GET", "POST"])
 def ocorrencia():
@@ -151,6 +146,92 @@ def ocorrencia():
             return f"Erro ao registrar ocorrência: {str(e)}"
 
     return render_template("ocorrencia.html")
+
+
+#@app.route("/configuracoes", methods=["GET", "POST"])
+#def configuracoes_usuario():
+#    if 
+
+@app.route("/usuario", methods=["GET", "POST"])
+def usuario():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        nome = request.form["nome"]
+        email = request.form["email"]
+        senha = request.form["senha"]
+        nascimento = request.form["nascimento"]
+        telefone = request.form["telefone"]
+        cpf = request.form["cpf"]
+        rg = request.form["rg"]
+
+        ind_front = request.files["ind_front"].read() if "ind_front" in request.files else None
+        ind_back = request.files["ind_back"].read() if "ind_back" in request.files else None
+
+        try:
+            with sqlite3.connect(DB_PATH) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE Usuario SET nome=?, email=?, senha=?, dat_nac=?, telefone=?, cpf=?, rg=?, ind_front=?, ind_back=?
+                    WHERE nome=?
+                """, (nome, email, senha, nascimento, telefone, cpf, rg, ind_front, ind_back, session["usuario"]))
+                conn.commit()
+            session["usuario"] = nome  # Atualiza a sessão com o novo nome
+        except sqlite3.IntegrityError as e:
+            return f"Erro ao atualizar: {str(e)}"
+
+    # Sempre busca os dados atualizados após o GET ou POST
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT nome, email, senha, dat_nac, telefone FROM Usuario WHERE nome = ?", (session["usuario"],))
+        dados = cursor.fetchone()
+
+    if dados:
+        return render_template("usuario.html", usuario=dados)
+    else:
+        return "Usuário não encontrado."
+
+
+##########################################
+################# Rotas ##################
+##########################################
+
+
+@app.route("/telaPrincipal")
+def tela_principal():
+    if "usuario" not in session:
+        return redirect("/login")
+    return render_template("telaPrincipal.html")
+
+
+@app.route("/configuracoes")
+def configuracoes():
+    return render_template("configuracoes.html")
+
+
+@app.route("/usuario_simples")
+def usuario_simples():
+    return render_template("usuario.html")
+
+
+@app.route('/cadastro', methods=['GET'])
+def cadastro():
+    return render_template('cadastro.html')
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect("/login")
+
+
+#### Rota de inicio
+
+@app.route("/")
+def index():
+    return render_template("login.html")
+
 
 if __name__ == "__main__":
     criar_banco()
