@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
 
@@ -65,15 +66,16 @@ def login():
 
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT nome FROM Usuario WHERE email = ? AND senha = ?", (email, senha))
+            cursor.execute("SELECT nome, senha FROM Usuario WHERE email = ?", (email,))
             resultado = cursor.fetchone()
 
-            if resultado:
+            if resultado and check_password_hash(resultado[1], senha):
                 session["usuario"] = resultado[0]
                 return redirect("/telaPrincipal")
             else:
                 flash("Email ou senha inválidos!", "erro")
                 return redirect("/login")
+
 
     return render_template("login.html")
 
@@ -148,6 +150,7 @@ def ocorrencia():
     return render_template("ocorrencia.html")
 
 
+######## Função para exibir o perfil do usuário
 @app.route("/usuario", methods=["GET", "POST"])
 def usuario():
     if "usuario" not in session:
@@ -156,7 +159,7 @@ def usuario():
     if request.method == "POST":
         nome = request.form["nome"]
         email = request.form["email"]
-        senha = request.form["senha"]
+        senha = generate_password_hash(request.form["senha"])
         nascimento = request.form["nascimento"]
         telefone = request.form["telefone"]
         cpf = request.form["cpf"]
@@ -189,7 +192,7 @@ def usuario():
         return "Usuário não encontrado."
     
 
-    ######## Função para editar o perfil do usuário
+######## Função para editar o perfil do usuário
 @app.route("/editar", methods=["GET", "POST"])
 def editar():
     if "usuario" not in session:
@@ -245,13 +248,14 @@ def alterar_senha():
 
             senha_no_banco = resultado[0]
 
-            if senha_atual != senha_no_banco:
+            if not check_password_hash(senha_no_banco, senha_atual):
                 return "Senha atual incorreta."
 
             if nova_senha != confirmar_senha:
                 return "As novas senhas não coincidem."
 
-            cursor.execute("UPDATE Usuario SET senha = ? WHERE nome = ?", (nova_senha, session["usuario"]))
+            nova_senha_hash = generate_password_hash(nova_senha)
+            cursor.execute("UPDATE Usuario SET senha = ? WHERE nome = ?", (nova_senha_hash, session["usuario"]))
             conn.commit()
             return redirect("/usuario")
 
