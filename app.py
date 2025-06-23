@@ -148,10 +148,6 @@ def ocorrencia():
     return render_template("ocorrencia.html")
 
 
-#@app.route("/configuracoes", methods=["GET", "POST"])
-#def configuracoes_usuario():
-#    if 
-
 @app.route("/usuario", methods=["GET", "POST"])
 def usuario():
     if "usuario" not in session:
@@ -191,6 +187,77 @@ def usuario():
         return render_template("usuario.html", usuario=dados)
     else:
         return "Usuário não encontrado."
+    
+
+    ######## Função para editar o perfil do usuário
+@app.route("/editar", methods=["GET", "POST"])
+def editar():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+
+        if request.method == "POST":
+            nome = request.form["nome"]
+            email = request.form["email"]
+            telefone = request.form["telefone"]
+            nascimento = request.form["nascimento"]
+
+            # Atualiza os dados do usuário
+            cursor.execute("""
+                UPDATE Usuario
+                SET nome = ?, email = ?, telefone = ?, dat_nac = ?
+                WHERE nome = ?
+            """, (nome, email, telefone, nascimento, session["usuario"]))
+            conn.commit()
+            session["usuario"] = nome  # Atualiza o nome da sessão
+            return redirect("/usuario")
+
+        # GET: busca dados para preencher formulário
+        cursor.execute("SELECT nome, email, senha, dat_nac, telefone FROM Usuario WHERE nome = ?", (session["usuario"],))
+        usuario = cursor.fetchone()
+        if usuario:
+            return render_template("editar_perfil.html", usuario=usuario)
+        else:
+            return "Usuário não encontrado."
+
+
+
+####### Função para alterar a senha do usuário
+@app.route("/alterar_senha", methods=["GET", "POST"])
+def alterar_senha():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        senha_atual = request.form["senha_atual"]
+        nova_senha = request.form["nova_senha"]
+        confirmar_senha = request.form["confirmar_senha"]
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT senha FROM Usuario WHERE nome = ?", (session["usuario"],))
+            resultado = cursor.fetchone()
+            if not resultado:
+                return "Usuário não encontrado."
+
+            senha_no_banco = resultado[0]
+
+            if senha_atual != senha_no_banco:
+                return "Senha atual incorreta."
+
+            if nova_senha != confirmar_senha:
+                return "As novas senhas não coincidem."
+
+            cursor.execute("UPDATE Usuario SET senha = ? WHERE nome = ?", (nova_senha, session["usuario"]))
+            conn.commit()
+            return redirect("/usuario")
+
+    return render_template("alterar_senha.html")
+
+
 
 
 ##########################################
@@ -224,6 +291,15 @@ def cadastro():
 def logout():
     session.clear()
     return redirect("/login")
+
+@app.route("/editar", methods=["GET"])
+def editar_perfil():
+    return render_template("editar_perfil.html")
+
+@app.route("/alterar_senha", methods=["GET"])
+def alterar_senha():
+    return render_template("alterar_senha.html")
+
 
 
 #### Rota de inicio
