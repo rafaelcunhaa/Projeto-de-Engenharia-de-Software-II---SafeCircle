@@ -151,38 +151,35 @@
   
     <div class="sidebar" id="sidebar">
         <h2>Menu</h2>
-        <a href="#">Meu Usuário</a>
-        <a href="#">Meu Histórico</a>
-        <a href="#">Configurações</a>
-        <a href="#">Avaliação</a>
-        <a href="#">Entidades</a>
+    <a href="{{ url_for('configuracoes') }}">Configurações</a>
+    <a href="#">Avaliação</a>
+    <a href="{{ url_for('usuario') }}">Perfil</a>
+    <a href="#">Entidades</a>
+    <a href="{{ url_for('historico_de_ocorrencias') }}">Histórico de Ocorrências</a>
+    <a href="{{ url_for('logout') }}">Sair</a>
     </div>
 </header>
 <body>
-  <main>
-    <div class="container">
       <header>
         <h1>Minha Conta</h1>
-      </header>
-      <img src="fotocolocadadeperfilnoinicio.jpg" alt="Foto do usuário" class="profile-pic"/>
-
-      <div class="informacoes">
-            <h2>Nome do Usuário</h2>
-            <p><strong>Email:</strong> usuario@exemplo.com</p>
-            <p><strong>Senha:</strong> ••••••••••••••••</p>
-
-            <h3>Informações Pessoais</h3>
-            <p><strong>Telefone:</strong> (00) 00000-0000</p>
-            <p><strong>Data de nascimento:</strong> 01/01/2000</p>
-            <p><strong>Endereço:</strong> Rua Exemplo, 123 - Cidade/UF</p>
-      </div>
-
-      <div class="buttons">
-            <button>Editar Perfil</button>
-            <button>Alterar Senha</button>
-            <button>Sair da Conta</button>
-      </div>
-    </div>
+    </header>
+  <main>
+        <div class="container">
+            <h2>{{ usuario[0] }}</h2>
+            <p>Email: {{ usuario[1] }}</p>
+            <p>Senha: *****</p>
+            <p>Telefone: {{ usuario[4] }}</p>
+            <p>Data de nascimento: {{ usuario[3] }}</p>
+            <form action="/editar" method="GET">
+                <button type="submit">Editar Perfil</button>
+            </form>
+            <form action="/alterar_senha" method="GET">
+                <button type="submit">Alterar Senha</button>
+            </form>
+            <form action="/logout" method="POST">
+             <button type="submit">Sair da Conta</button>
+            </form>
+        </div>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
