@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alterar Senha</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    header {
+      text-align: center;
+      color: #dc3545;
+    }
+    label {
+      font-size: 14px;
+      color: #333;
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      background-color: #dc3545;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container">
+      <header><h1>Alterar Senha</h1></header>
+      <form action="/alterar_senha" method="POST">
+        <label for="senha_atual">Senha Atual</label>
+        <input type="password" name="senha_atual" required>
+
+        <label for="nova_senha">Nova Senha</label>
+        <input type="password" name="nova_senha" required>
+
+        <label for="confirmar_senha">Confirmar Nova Senha</label>
+        <input type="password" name="confirmar_senha" required>
+
+        <button type="submit">Atualizar Senha</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

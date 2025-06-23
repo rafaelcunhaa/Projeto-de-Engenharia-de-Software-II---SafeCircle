@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Perfil</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    header {
+      text-align: center;
+      color: #dc3545;
+    }
+    label {
+      font-size: 14px;
+      color: #333;
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      background-color: #dc3545;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container">
+      <header><h1>Editar Perfil</h1></header>
+      <form action="/editar" method="POST">
+        <label for="nome">Nome</label>
+        <input type="text" name="nome" value="{{ usuario[0] }}" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" value="{{ usuario[1] }}" required>
+
+        <label for="telefone">Telefone</label>
+        <input type="text" name="telefone" value="{{ usuario[4] }}" required>
+
+        <label for="nascimento">Data de Nascimento</label>
+        <input type="date" name="nascimento" value="{{ usuario[3] }}" required>
+
+        <button type="submit">Salvar Alterações</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

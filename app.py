@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
 
@@ -10,6 +11,8 @@ DB_PATH = "safecircle.db"
 ########### BANCO DE DADOS ###############
 ##########################################
 
+
+
 def criar_banco():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -18,7 +21,7 @@ def criar_banco():
             id_user INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL CHECK(LENGTH(nome) <= 50),
             email TEXT UNIQUE NOT NULL CHECK(LENGTH(email) <= 50),
-            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 50),
+            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 255),
             dat_nac DATE NOT NULL,
             telefone TEXT UNIQUE NOT NULL CHECK(LENGTH(telefone) = 11),
             cpf TEXT UNIQUE NOT NULL CHECK(LENGTH(cpf) = 11),
@@ -44,10 +47,11 @@ def criar_banco():
         CREATE TABLE IF NOT EXISTS Adimin(
             id_adimin INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE NOT NULL CHECK(LENGTH(email) <= 50),
-            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 50)
+            senha TEXT NOT NULL CHECK(LENGTH(senha) <= 255)
         );        
         """)
         conn.commit()
+
 
 
 ##########################################
@@ -55,7 +59,7 @@ def criar_banco():
 ##########################################
 
 
-####### Função para verificar se o usuário é administrador
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -65,10 +69,10 @@ def login():
 
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT nome FROM Usuario WHERE email = ? AND senha = ?", (email, senha))
+            cursor.execute("SELECT nome, senha FROM Usuario WHERE email = ?", (email,))
             resultado = cursor.fetchone()
 
-            if resultado:
+            if resultado and check_password_hash(resultado[1], senha):
                 session["usuario"] = resultado[0]
                 return redirect("/telaPrincipal")
             else:
@@ -78,13 +82,14 @@ def login():
     return render_template("login.html")
 
 
-######## Função para verificar se o usuário é administrador
+
+
 
 @app.route("/cadastrar", methods=["POST"])
 def cadastrar():
     nome = request.form["nome"]
     email = request.form["email"]
-    senha = request.form["senha"]
+    senha = generate_password_hash(request.form["senha"])
     nascimento = request.form["nascimento"]
     telefone = request.form["telefone"]
     cpf = request.form["cpf"]
@@ -107,7 +112,7 @@ def cadastrar():
         return f"Erro: {str(e)}"
 
 
-######## Função para registrar uma ocorrência
+
 
 @app.route("/ocorrencia" , methods=["GET", "POST"])
 def ocorrencia():
@@ -148,9 +153,8 @@ def ocorrencia():
     return render_template("ocorrencia.html")
 
 
-#@app.route("/configuracoes", methods=["GET", "POST"])
-#def configuracoes_usuario():
-#    if 
+
+
 
 @app.route("/usuario", methods=["GET", "POST"])
 def usuario():
@@ -160,7 +164,7 @@ def usuario():
     if request.method == "POST":
         nome = request.form["nome"]
         email = request.form["email"]
-        senha = request.form["senha"]
+        senha = generate_password_hash(request.form["senha"])
         nascimento = request.form["nascimento"]
         telefone = request.form["telefone"]
         cpf = request.form["cpf"]
@@ -177,11 +181,10 @@ def usuario():
                     WHERE nome=?
                 """, (nome, email, senha, nascimento, telefone, cpf, rg, ind_front, ind_back, session["usuario"]))
                 conn.commit()
-            session["usuario"] = nome  # Atualiza a sessão com o novo nome
+            session["usuario"] = nome
         except sqlite3.IntegrityError as e:
             return f"Erro ao atualizar: {str(e)}"
 
-    # Sempre busca os dados atualizados após o GET ou POST
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT nome, email, senha, dat_nac, telefone FROM Usuario WHERE nome = ?", (session["usuario"],))
@@ -193,10 +196,112 @@ def usuario():
         return "Usuário não encontrado."
 
 
+
+
+
+@app.route("/editar", methods=["GET", "POST"])
+def editar():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+
+        if request.method == "POST":
+            nome = request.form["nome"]
+            email = request.form["email"]
+            telefone = request.form["telefone"]
+            nascimento = request.form["nascimento"]
+
+            cursor.execute("""
+                UPDATE Usuario
+                SET nome = ?, email = ?, telefone = ?, dat_nac = ?
+                WHERE nome = ?
+            """, (nome, email, telefone, nascimento, session["usuario"]))
+            conn.commit()
+            session["usuario"] = nome
+            return redirect("/usuario")
+
+        cursor.execute("SELECT nome, email, senha, dat_nac, telefone FROM Usuario WHERE nome = ?", (session["usuario"],))
+        usuario = cursor.fetchone()
+        if usuario:
+            return render_template("editar_perfil.html", usuario=usuario)
+        else:
+            return "Usuário não encontrado."
+
+
+
+
+
+@app.route("/alterar_senha", methods=["GET", "POST"])
+def alterar_senha():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        senha_atual = request.form["senha_atual"]
+        nova_senha = request.form["nova_senha"]
+        confirmar_senha = request.form["confirmar_senha"]
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT senha FROM Usuario WHERE nome = ?", (session["usuario"],))
+            resultado = cursor.fetchone()
+            if not resultado:
+                return "Usuário não encontrado."
+
+            senha_no_banco = resultado[0]
+
+            if not check_password_hash(senha_no_banco, senha_atual):
+                return "Senha atual incorreta."
+
+            if nova_senha != confirmar_senha:
+                return "As novas senhas não coincidem."
+
+            nova_senha_hash = generate_password_hash(nova_senha)
+            cursor.execute("UPDATE Usuario SET senha = ? WHERE nome = ?", (nova_senha_hash, session["usuario"]))
+            conn.commit()
+            return redirect("/usuario")
+
+    return render_template("alterar_senha.html")
+
+
+
+
+@app.route("/historicoDeOcorrencias")
+def historico_de_ocorrencias():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+
+        # Recupera o ID do usuário atual pela sessão
+        cursor.execute("SELECT id_user FROM Usuario WHERE nome = ?", (session["usuario"],))
+        resultado = cursor.fetchone()
+
+        if not resultado:
+            return "Usuário não encontrado."
+
+        id_user = resultado[0]
+
+        # Busca todas as ocorrências desse usuário
+        cursor.execute("""
+            SELECT data_inicio, data_conclusao, titulo, descricao, estagio, local
+            FROM Ocorrencia
+            WHERE id_user = ?
+            ORDER BY data_inicio DESC
+        """, (id_user,))
+
+        ocorrencias = cursor.fetchall()
+
+    return render_template("historicoDeOcorrencias.html", ocorrencias=ocorrencias)
+
+
+
 ##########################################
 ################# Rotas ##################
 ##########################################
-
 
 @app.route("/telaPrincipal")
 def tela_principal():
@@ -204,34 +309,26 @@ def tela_principal():
         return redirect("/login")
     return render_template("telaPrincipal.html")
 
-
 @app.route("/configuracoes")
 def configuracoes():
     return render_template("configuracoes.html")
-
 
 @app.route("/usuario_simples")
 def usuario_simples():
     return render_template("usuario.html")
 
-
 @app.route('/cadastro', methods=['GET'])
 def cadastro():
     return render_template('cadastro.html')
-
 
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return redirect("/login")
 
-
-#### Rota de inicio
-
 @app.route("/")
 def index():
     return render_template("login.html")
-
 
 if __name__ == "__main__":
     criar_banco()
