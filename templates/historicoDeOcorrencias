@@ -1,14 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Alterações - SafeCircle</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Histórico de Ocorrências - SafeCircle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #dc3545;
+    }
+
+    .ocorrencia {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .ocorrencia h3 {
+      margin-bottom: 5px;
+      color: #dc3545;
+    }
+
+    .ocorrencia p {
+      margin: 4px 0;
+    }
+  </style>
 </head>
-<header>
-    
-</header>
 <body>
-    
+  <h2>Histórico de Ocorrências</h2>
+
+  {% if ocorrencias %}
+    {% for o in ocorrencias %}
+      <div class="ocorrencia">
+        <h3>{{ o[2] }}</h3> <!-- título -->
+        <p><strong>Descrição:</strong> {{ o[3] }}</p>
+        <p><strong>Estágio:</strong> {{ o[4] }}</p>
+        <p><strong>Local:</strong> {{ o[5] }}</p>
+        <p><strong>Início:</strong> {{ o[0] }}</p>
+        <p><strong>Conclusão:</strong> {{ o[1] }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Você ainda não registrou nenhuma ocorrência.</p>
+  {% endif %}
 </body>
 </html>
