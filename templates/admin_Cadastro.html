@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Validação de Cadastro - Administrador</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #d63031);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      text-align: center;
+      color: #d63031;
+      margin-bottom: 8px;
+    }
+
+    header h2 {
+      font-weight: bold;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #ccc;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .user-info div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .user-info label {
+      font-weight: bold;
+      color: #555;
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .user-info span {
+      flex-grow: 1;
+      word-break: break-word;
+    }
+
+    .photos {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .photos img {
+      width: 140px;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      object-fit: contain;
+      background: white;
+    }
+
+    label[for="observacoes"] {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #555;
+      font-size: 14px;
+    }
+
+    textarea#observacoes {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 14px;
+      margin-top: 6px;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: white;
+    }
+
+    .btn-approve {
+      background-color: #28a745;
+    }
+    .btn-approve:hover {
+      background-color: #218838;
+    }
+
+    .btn-reject {
+      background-color: #dc3545;
+    }
+    .btn-reject:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h2>Validação de Cadastro</h2>
+    </header>
+
+    <div class="user-info">
+      <div><label>Nome Completo:</label> <span></span></div>
+      <div><label>Data Nascimento:</label> <span></span></div>
+      <div><label>Email:</label> <span></span></div>
+      <div><label>Telefone:</label> <span></span></div>
+      <div><label>CPF:</label> <span></span></div>
+      <div><label>RG:</label> <span></span></div>
+    </div>
+
+    <div class="photos">
+      <div>
+        <label>Identidade (Frente)</label>
+        <img src="https://via.placeholder.com/140x90?text=Frente+ID" alt="Foto da identidade frente" />
+      </div>
+      <div>
+        <label>Identidade (Verso)</label>
+        <img src="https://via.placeholder.com/140x90?text=Verso+ID" alt="Foto da identidade verso" />
+      </div>
+    </div>
+
+    <form action="/admin/validar_cadastro" method="POST">
+      <label for="observacoes">Observações do Admin (opcional):</label>
+      <textarea id="observacoes" name="observacoes" placeholder="Comentários para registro ou justificativa..."></textarea>
+
+      <div class="actions">
+        <button type="submit" name="status" value="aprovado" class="btn-approve">Aprovar</button>
+        <button type="submit" name="status" value="rejeitado" class="btn-reject">Rejeitar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
